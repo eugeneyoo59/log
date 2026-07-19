@@ -15,7 +15,7 @@
 * This is a type, meaning its just a device that checks for object adherence to the rules of this structure.
 
 `formatTimestamp`
-* This function essential formats the date for the last message.
+* This function essentially formats the date for the last message.
 * This function takes an iso (an iso date string) thats typed to string, then returns string. 
 * It then forms a new Date object with that iso, then another date object with the current moment. 
 * isToday is a boolean if the year, month, date of now and date is equal. If true, we extract the hours and minutes of the day and return that. Else, we return the day the message was sent in mo/day format. 
