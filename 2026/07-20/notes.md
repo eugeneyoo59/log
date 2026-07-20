@@ -17,13 +17,13 @@ Continuing with ` MatchesListScreen()`
 - User flow in this screen is basically: User moves into matches screen --> screen initially mounts, initializing empty state and rendering JSX (in this case, loading spinner) --> useFocusEffect() calls loadMatches() to update state, which triggers a re-render --> latest matches information is shown on JSX.
 - We use `useCallback()` to wrap this matches-loading function to memoize it, making it the same memory object every render. This ensures that re-renders won't trigger useEffect() realtime subscription (which checks reference equality) to supabase to re-run, wasting time/computation.
 
-###Section on `useFocusEffect()`
+### Section on `useFocusEffect()`
 
 - Note, useFocusEffect() runs the callback at focus, then stores the return value (called cleanup, expecting a function), then runs the cleanup function at blur.
 - That's why we need to wrap the stable loadMatches() function in an arrow function. Because its an async function that returns a promise, and useFocusEffect() checks if the cleanup != null before calling cleanup(). Currently the empty arrow function returns undefined which fails the if statement and doesn't lead to any calls. If we didn't wrap it we'd have a promise returned. It passes the check, and react would try to 'call' a promise, treating it like a function, which is going to cause a crash.
 - We also use the useCallback() function for `useFocusEffect(useCallback(() => { loadMatches(); }, [loadMatches]));` because useFocusEffect() treats the callback you pass into the function as a dependency. When the component is re-rendered, everything is re-computed, but since we used useCallback() without any dependencies of its own it will always return the original arrow function -- same object, no re-triggering of useFocusEffect at re-render, and only triggers on focus. This avoids a situation where 1. State changes 2. Usefocus triggers 3. Loadmatches triggers 4. State changes 5. Usefocus triggers...
 
-###Section on `useEffect()`
+### Section on `useEffect()`
 
 - useEffect() runs on both mount and re-renders without a dependency array, only on mount if empty dependency array, and specific changes on dependency array elements if it has a nonempty dependency array.
 - `const ids = matchIdsKey ? matchIdsKey.split(",") : [];` We create a string array of match IDs. JS will coerce matchIdsKey into a boolean, where non empty is truthy, empty is falsy. So if it exists, we split it by commas into an array of Strings.
