@@ -8,3 +8,5 @@ One artifact a day. It runs, compiles, or proves.
 - Linear Algebra
 
 ## Log
+
+2026-07-19 - [annotated message system](2026/07-19/)
